@@ -26,15 +26,7 @@ void print(){
 }
 
 void solve(int i){
-    for(int j=x[i-1]+1;j<=n;j++){ //x[0]=0,x[0]+1=1
-        x[i] = j;
-        if(i == m){
-            print();
-        } 
-        else{
-            solve(i+1);
-        }
-    }
+    
 }
 
 signed main(){
