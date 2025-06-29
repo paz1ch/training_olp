@@ -2,6 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "fibo",
+            "request": "launch",
+            "mainClass": "fibo",
+            "projectName": ""
+        },
+        {
             "name": "C/C++: Build and debug active file",
             "type": "cppdbg",
             "request": "launch",
