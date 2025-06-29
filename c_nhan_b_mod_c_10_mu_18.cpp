@@ -1,19 +1,13 @@
-#include <bits/stdc++.h>
+	#include <bits/stdc++.h>
 
 using namespace std;
 using ll = long long;
 
-ll solve(ll a, ll b, ll m){
-    ll s = 0;
-    while(a > 1){
-        if(a%2!=0){
-            s = (s+b)%m;
-        }
-        a = a>1;
-        b = (b<1)%m;
-    }
-    s = (s+b)%m;
-    return s;
+ll solve(ll a, ll b, ll mod){
+    if(b == 0) return 0;
+    ll x = solve(a,b/2,mod)%mod;
+    if(b&1) return ((x+x)%mod + a%mod)%mod;
+    else return (x+x)%mod;
 }
 
 signed main(){

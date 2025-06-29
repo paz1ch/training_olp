@@ -1,0 +1,92 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int N = 1e5, mod = 1e9 + 7;
+
+int min_prime[N + 1], ans[N + 1], inv[20*N];
+vector<int> a[N + 1];
+map<int, int> f[N + 1];
+
+void sieve()
+{
+    for (int i = 2; i*i <= N; i++)
+        if (min_prime[i] == 0)
+            for (int j = i*i; j <= N; j += i)
+                if (min_prime[j] == 0) min_prime[j] = i;
+    for (int i = 2; i <= N; ++i)
+        if (min_prime[i] == 0) min_prime[i] = i;
+}
+
+void dfs(int u, int pre = 0)
+{
+    for (auto v : a[u])
+    {
+        if (v == pre) continue;
+        dfs(v, u);
+        ans[u] = 1ll*ans[u]*ans[v]%mod;
+        if ((int)f[u].size() < (int)f[v].size()) swap(f[u], f[v]);
+        for (auto x : f[v])
+        {
+            if (f[u][x.first])
+                ans[u] = 1ll*ans[u]*(f[u][x.first]+x.second+1)%mod*inv[f[u][x.first]+1]%mod*inv[x.second+1]%mod;
+            f[u][x.first] += x.second;
+        }
+    }
+}
+
+int main()
+{    
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    freopen("tree.inp", "r", stdin);
+    freopen("tree.out", "w", stdout);
+
+    inv[1] = 1;
+    for (int i = 2; i < 20*N; i ++) inv[i] = 1LL*(mod-mod/i)*inv[mod%i]%mod;
+
+    sieve();
+
+    int n, q;
+    cin >> n >> q;
+
+    for (int i = 1; i <= n; i++)
+    {
+        int x, cnt = 0;
+        cin >> x;
+        ans[i] = 1;
+        while (min_prime[x])
+        {
+            if (!f[i][min_prime[x]])
+            {
+                ans[i] = 1ll*ans[i]*(cnt+1)%mod;
+                cnt = 0;
+            }
+            cnt++;
+            f[i][min_prime[x]]++;
+            x /= min_prime[x];
+        }
+        ans[i] = 1ll*ans[i]*(cnt+1)%mod;
+    }
+
+    for (int i = 1; i < n; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+        a[u].push_back(v);
+        a[v].push_back(u);
+    }
+
+    dfs(1);
+
+    while (q--)
+    {
+        int u;
+        cin >> u;
+        cout << ans[u] << ' ';
+    }
+
+    return 0;
+}
